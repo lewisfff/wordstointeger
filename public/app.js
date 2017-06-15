@@ -89,7 +89,7 @@ var WordsToNumberApp = function () {
         value: function convert(wordString) {
             var tokens = this.wordSplit(wordString);
 
-            if (this.validateInput(tokens)) return this.calcNumber(tokens);
+            if (this.validateInput(tokens)) return this.calcNumber(tokens);else return this.showInputError(wordString);
         }
     }, {
         key: 'validateInput',
@@ -100,7 +100,6 @@ var WordsToNumberApp = function () {
 
             tokens.forEach(function (item) {
                 if (_this.numbers[item]) {} else if (_this.multiples[item]) {} else if (item === 'and') {} else {
-                    _this.showInputError(item);
                     valid = false;
                 }
             });
@@ -109,8 +108,8 @@ var WordsToNumberApp = function () {
         }
     }, {
         key: 'showInputError',
-        value: function showInputError(item) {
-            alert(item + ' not accounted for');
+        value: function showInputError(wordString) {
+            alert('Invalid input string "' + wordString + '"');
         }
     }, {
         key: 'wordSplit',
@@ -122,7 +121,7 @@ var WordsToNumberApp = function () {
         value: function calcNumber(tokens) {
             var result = void 0;
 
-            // loop through and perform arithmetic
+            // loop through tokens and perform arithmetic
             result = tokens;
 
             this.showResult(result);

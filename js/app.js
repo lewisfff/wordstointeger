@@ -12,6 +12,8 @@ class WordsToNumberApp {
 
         if (this.validateInput(tokens))
             return this.calcNumber(tokens);
+        else
+            return this.showInputError(wordString);
     }
 
     validateInput(tokens) {
@@ -22,7 +24,6 @@ class WordsToNumberApp {
             } else if (this.multiples[item]) {
             } else if (item === 'and') {
             } else {
-                this.showInputError(item);
                 valid = false;
             }
         });
@@ -30,8 +31,8 @@ class WordsToNumberApp {
         return valid;
     }
 
-    showInputError(item) {
-        alert(item + ' not accounted for');
+    showInputError(wordString) {
+        alert('Invalid input string "'+ wordString +'"');
     }
 
     wordSplit(wordString) {
@@ -41,7 +42,7 @@ class WordsToNumberApp {
     calcNumber(tokens) {
         let result;
 
-        // loop through and perform arithmetic
+        // loop through tokens and perform arithmetic
         result = tokens;
 
         this.showResult(result);
