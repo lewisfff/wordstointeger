@@ -94,15 +94,22 @@ var WordsToNumberApp = function () {
     }, {
         key: 'validateInput',
         value: function validateInput(tokens) {
-            var _this = this;
-
             var valid = true;
 
-            tokens.forEach(function (item) {
-                if (_this.numbers[item]) {} else if (_this.multiples[item]) {} else if (item === 'and') {} else {
+            for (var i = 0; i < tokens.length; i++) {
+                if (i > 0) {
+                    // check for invalid words after first word
+                    if (tokens[i] === 'zero' || tokens[i] === 'minus') {
+                        valid = false;
+                    }
+                }
+
+                if (this.numbers[tokens[i]] != null) {} else if (this.multiples[tokens[i]] != null) {} else if (tokens[i] === 'and') {
+                    tokens.splice(i, 1);
+                } else {
                     valid = false;
                 }
-            });
+            }
 
             return valid;
         }
@@ -119,17 +126,29 @@ var WordsToNumberApp = function () {
     }, {
         key: 'calcNumber',
         value: function calcNumber(tokens) {
-            var result = void 0;
+            var _this = this;
 
-            // loop through tokens and perform arithmetic
-            result = tokens;
+            var result = 0;
+            var tempSum = 0;
+
+            tokens.forEach(function (token) {
+                if (_this.numbers[token] != null) {
+                    result += _this.numbers[token];
+                    // handles 'hundred thousand'
+                    // todo: handle 'thousand million' and so on
+                } else if (token == 'hundred') {
+                    result *= 100;
+                } else {
+                    tempSum += result * _this.multiples[token];
+                    result = tempSum;
+                }
+            });
 
             this.showResult(result);
         }
     }, {
         key: 'showResult',
         value: function showResult(result) {
-            // display the result on the web page
             console.log(result);
         }
     }]);
@@ -200,6 +219,7 @@ var numbers = {
 };
 
 var multiples = {
+    'hundred': 100,
     'thousand': 1000,
     'million': 1000000,
     'billion': 1000000000,

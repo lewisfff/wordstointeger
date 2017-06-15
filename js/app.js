@@ -19,14 +19,23 @@ class WordsToNumberApp {
     validateInput(tokens) {
         let valid = true;
 
-        tokens.forEach((item) => {
-            if (this.numbers[item]) {
-            } else if (this.multiples[item]) {
-            } else if (item === 'and') {
+        for (var i = 0; i < tokens.length; i++) {
+            if (i > 0) {
+                // check for invalid words after first word
+                if (tokens[i] === 'zero' ||
+                    tokens[i] === 'minus') {
+                    valid = false;
+                }
+            }
+
+            if (this.numbers[tokens[i]] != null) {
+            } else if (this.multiples[tokens[i]] != null) {
+            } else if (tokens[i] === 'and') {
+                tokens.splice(i, 1);
             } else {
                 valid = false;
             }
-        });
+        }
 
         return valid;
     }
@@ -40,16 +49,26 @@ class WordsToNumberApp {
     }
 
     calcNumber(tokens) {
-        let result;
+        let result = 0;
+        let tempSum = 0;
 
-        // loop through tokens and perform arithmetic
-        result = tokens;
+        tokens.forEach((token) => {
+            if (this.numbers[token] != null) {
+                result += this.numbers[token];
+            // handles 'hundred thousand'
+            // todo: handle 'thousand million' and so on
+            } else if (token == 'hundred') {
+                result *= 100;
+            } else {
+                tempSum += result * this.multiples[token];
+                result = tempSum;
+            }
+        });
 
         this.showResult(result);
     }
 
     showResult(result) {
-        // display the result on the web page
         console.log(result);
     }
 }
