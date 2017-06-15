@@ -57,24 +57,23 @@ class WordsToNumberApp {
 
     calcNumber(tokens) {
         let invalid = false;
-        let tempSum = 0;
+        let sum = 0;
+        let results = [];
         let result = 0;
         let lastToken;
         let isNegative;
 
-        // todo: split the tokens into groups
-
         tokens.forEach((token) => {
             if (this.numbers[token] != null) {
-                result += this.numbers[token];
+                if(sum)
+                    results.push(sum);
+                sum = this.numbers[token];
             } else if (this.multiples[token] != null) {
                 if (this.multiples[lastToken] != null) {
-                    // if input is entered as 'thousand thousand' or
-                    // 'million hundred' for example, make it invalid
                     if(this.multiples[lastToken] >= this.multiples[token])
                         invalid = true;
                 }
-                result *= this.multiples[token];
+                sum *= this.multiples[token];
             } else if (token === 'minus') {
                 isNegative = true;
             } else {
@@ -83,6 +82,24 @@ class WordsToNumberApp {
 
             lastToken = token;
         });
+        results.push(sum);
+
+        sum = 0;
+        let mag;
+        for (var i = results.length - 1; i >= 0; i--) {
+            let cur = results[i];
+            if (i === results.length - 1) {
+                sum += cur;
+            } else {
+                if(cur > sum){
+                    sum += cur;
+                } else {
+                    mag = this.magnitude(sum) - (this.magnitude(cur) - 1);
+                    sum += cur * (10 ** mag);
+                }
+            }
+        }
+        result = sum;
 
         if(isNegative)
             result = -Math.abs(result);
@@ -91,6 +108,10 @@ class WordsToNumberApp {
             this.showResult(result);
         else
             this.showInputError('Invalid number syntax');
+    }
+
+    magnitude(number) {
+        return number.toString().length;
     }
 
     showResult(result) {

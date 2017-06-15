@@ -140,23 +140,21 @@ var WordsToNumberApp = function () {
             var _this2 = this;
 
             var invalid = false;
-            var tempSum = 0;
+            var sum = 0;
+            var results = [];
             var result = 0;
             var lastToken = void 0;
             var isNegative = void 0;
 
-            // todo: split the tokens into groups
-
             tokens.forEach(function (token) {
                 if (_this2.numbers[token] != null) {
-                    result += _this2.numbers[token];
+                    if (sum) results.push(sum);
+                    sum = _this2.numbers[token];
                 } else if (_this2.multiples[token] != null) {
                     if (_this2.multiples[lastToken] != null) {
-                        // if input is entered as 'thousand thousand' or
-                        // 'million hundred' for example, make it invalid
                         if (_this2.multiples[lastToken] >= _this2.multiples[token]) invalid = true;
                     }
-                    result *= _this2.multiples[token];
+                    sum *= _this2.multiples[token];
                 } else if (token === 'minus') {
                     isNegative = true;
                 } else {
@@ -165,10 +163,33 @@ var WordsToNumberApp = function () {
 
                 lastToken = token;
             });
+            results.push(sum);
+
+            sum = 0;
+            var mag = void 0;
+            for (var i = results.length - 1; i >= 0; i--) {
+                var cur = results[i];
+                if (i === results.length - 1) {
+                    sum += cur;
+                } else {
+                    if (cur > sum) {
+                        sum += cur;
+                    } else {
+                        mag = this.magnitude(sum) - (this.magnitude(cur) - 1);
+                        sum += cur * Math.pow(10, mag);
+                    }
+                }
+            }
+            result = sum;
 
             if (isNegative) result = -Math.abs(result);
 
             if (!invalid) this.showResult(result);else this.showInputError('Invalid number syntax');
+        }
+    }, {
+        key: 'magnitude',
+        value: function magnitude(number) {
+            return number.toString().length;
         }
     }, {
         key: 'showResult',
