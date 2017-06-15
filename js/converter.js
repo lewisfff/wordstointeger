@@ -82,7 +82,7 @@ class WordsToNumberConverter {
             lastToken = token;
         });
         results.push(sum);
-
+        console.log(results);
         return results;
     }
 
@@ -98,8 +98,12 @@ class WordsToNumberConverter {
                 if(cur > sum){
                     sum += cur;
                 } else {
-                    mag = this.magnitude(sum) - (this.magnitude(sum) - this.magnitude(cur));
-                    sum += cur * (10 ** mag);
+                    mag = (this.magnitude(sum)) - (this.magnitude(sum) - (this.magnitude(cur)));
+
+                    if(mag === 2)
+                        mag++;
+
+                    sum += cur * (10 ** (mag));
                 }
             }
         }

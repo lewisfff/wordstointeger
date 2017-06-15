@@ -277,7 +277,7 @@ var WordsToNumberConverter = function () {
                 lastToken = token;
             });
             results.push(sum);
-
+            console.log(results);
             return results;
         }
     }, {
@@ -295,6 +295,9 @@ var WordsToNumberConverter = function () {
                         sum += cur;
                     } else {
                         mag = this.magnitude(sum) - (this.magnitude(sum) - this.magnitude(cur));
+
+                        if (mag === 2) mag++;
+
                         sum += cur * Math.pow(10, mag);
                     }
                 }
