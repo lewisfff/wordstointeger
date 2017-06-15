@@ -27,7 +27,6 @@ class WordsToNumberConverter {
             } else if (tokens[i] === 'and') {
                 tokens.splice(i, 1);
             } else if (tokens[i] === 'zero' || tokens[i] === 'minus') {
-                // these words only make sense as the first word
                 if (i > 0) {
                     valid = false;
                 }
@@ -64,6 +63,8 @@ class WordsToNumberConverter {
 
         tokens.forEach((token) => {
             if (this.numbers[token] != null) {
+                if(this.numbers[lastToken] < 20 && this.numbers[token])
+                    this.invalid = true;
                 if(sum)
                     results.push(sum);
                 sum = this.numbers[token];

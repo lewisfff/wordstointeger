@@ -224,7 +224,6 @@ var WordsToNumberConverter = function () {
                 if (this.numbers[tokens[i]] != null) {} else if (this.multiples[tokens[i]] != null) {} else if (tokens[i] === 'and') {
                     tokens.splice(i, 1);
                 } else if (tokens[i] === 'zero' || tokens[i] === 'minus') {
-                    // these words only make sense as the first word
                     if (i > 0) {
                         valid = false;
                     }
@@ -262,6 +261,7 @@ var WordsToNumberConverter = function () {
 
             tokens.forEach(function (token) {
                 if (_this.numbers[token] != null) {
+                    if (_this.numbers[lastToken] < 20 && _this.numbers[token]) _this.invalid = true;
                     if (sum) results.push(sum);
                     sum = _this.numbers[token];
                 } else if (_this.multiples[token] != null) {
