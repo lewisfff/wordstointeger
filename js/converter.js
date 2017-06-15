@@ -98,7 +98,7 @@ class WordsToNumberConverter {
                 if(cur > sum){
                     sum += cur;
                 } else {
-                    mag = this.magnitude(sum) - (this.magnitude(cur) - 1);
+                    mag = this.magnitude(sum) - (this.magnitude(sum) - this.magnitude(cur));
                     sum += cur * (10 ** mag);
                 }
             }

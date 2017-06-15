@@ -294,7 +294,7 @@ var WordsToNumberConverter = function () {
                     if (cur > sum) {
                         sum += cur;
                     } else {
-                        mag = this.magnitude(sum) - (this.magnitude(cur) - 1);
+                        mag = this.magnitude(sum) - (this.magnitude(sum) - this.magnitude(cur));
                         sum += cur * Math.pow(10, mag);
                     }
                 }
