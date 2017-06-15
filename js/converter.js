@@ -82,7 +82,7 @@ class WordsToNumberConverter {
             lastToken = token;
         });
         results.push(sum);
-        console.log(results);
+
         return results;
     }
 

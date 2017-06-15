@@ -277,7 +277,7 @@ var WordsToNumberConverter = function () {
                 lastToken = token;
             });
             results.push(sum);
-            console.log(results);
+
             return results;
         }
     }, {
