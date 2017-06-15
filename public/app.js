@@ -94,7 +94,7 @@ var WordsToNumberApp = function () {
             var _this = this;
 
             this.actionButton.addEventListener('click', function () {
-                _this.convert(_this.inputZone.innerText);
+                _this.convert(_this.inputZone.value);
             });
         }
     }, {
@@ -150,9 +150,7 @@ var WordsToNumberApp = function () {
             tokens.forEach(function (token) {
                 if (_this2.numbers[token] != null) {
                     result += _this2.numbers[token];
-                    activeGroup = false;
                 } else if (_this2.multiples[token] != null) {
-
                     if (_this2.multiples[lastToken] != null) {
                         // if input is entered as 'thousand thousand' or
                         // 'million hundred' for example, make it invalid
@@ -162,9 +160,9 @@ var WordsToNumberApp = function () {
                 } else if (token === 'minus') {
                     isNegative = true;
                 } else {
-                    tempSum += result * _this2.multiples[token];
-                    result = tempSum;
+                    invalid = true;
                 }
+
                 lastToken = token;
             });
 

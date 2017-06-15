@@ -13,7 +13,7 @@ class WordsToNumberApp {
 
     eventListeners() {
         this.actionButton.addEventListener('click', () => {
-            this.convert(this.inputZone.innerText);
+            this.convert(this.inputZone.value);
         });
     }
 
@@ -67,23 +67,20 @@ class WordsToNumberApp {
         tokens.forEach((token) => {
             if (this.numbers[token] != null) {
                 result += this.numbers[token];
-                activeGroup = false;
             } else if (this.multiples[token] != null) {
-
                 if (this.multiples[lastToken] != null) {
                     // if input is entered as 'thousand thousand' or
                     // 'million hundred' for example, make it invalid
                     if(this.multiples[lastToken] >= this.multiples[token])
                         invalid = true;
-
                 }
                 result *= this.multiples[token];
             } else if (token === 'minus') {
                 isNegative = true;
             } else {
-                tempSum += result * this.multiples[token];
-                result = tempSum;
+                invalid = true;
             }
+
             lastToken = token;
         });
 
