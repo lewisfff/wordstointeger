@@ -82,9 +82,22 @@ var WordsToNumberApp = function () {
 
         this.numbers = data.numbers;
         this.multiples = data.multiples;
+        this.inputZone = document.getElementById('input-zone');
+        this.outputZone = document.getElementById('output-zone');
+        this.actionButton = document.getElementById('action-btn');
+        this.eventListeners();
     }
 
     _createClass(WordsToNumberApp, [{
+        key: 'eventListeners',
+        value: function eventListeners() {
+            var _this = this;
+
+            this.actionButton.addEventListener('click', function () {
+                _this.convert(_this.inputZone.innerText);
+            });
+        }
+    }, {
         key: 'convert',
         value: function convert(wordString) {
             var tokens = this.wordSplit(wordString);
@@ -97,15 +110,13 @@ var WordsToNumberApp = function () {
             var valid = true;
 
             for (var i = 0; i < tokens.length; i++) {
-                if (i > 0) {
-                    // check for invalid words after first word
-                    if (tokens[i] === 'zero' || tokens[i] === 'minus') {
-                        valid = false;
-                    }
-                }
-
                 if (this.numbers[tokens[i]] != null) {} else if (this.multiples[tokens[i]] != null) {} else if (tokens[i] === 'and') {
                     tokens.splice(i, 1);
+                } else if (tokens[i] === 'zero' || tokens[i] === 'minus') {
+                    // these words only make sense as the first word
+                    if (i > 0) {
+                        valid = false;
+                    }
                 } else {
                     valid = false;
                 }
@@ -126,30 +137,45 @@ var WordsToNumberApp = function () {
     }, {
         key: 'calcNumber',
         value: function calcNumber(tokens) {
-            var _this = this;
+            var _this2 = this;
 
-            var result = 0;
+            var invalid = false;
             var tempSum = 0;
+            var result = 0;
+            var lastToken = void 0;
+            var isNegative = void 0;
+
+            // todo: split the tokens into groups
 
             tokens.forEach(function (token) {
-                if (_this.numbers[token] != null) {
-                    result += _this.numbers[token];
-                    // handles 'hundred thousand'
-                    // todo: handle 'thousand million' and so on
-                } else if (token == 'hundred') {
-                    result *= 100;
+                if (_this2.numbers[token] != null) {
+                    result += _this2.numbers[token];
+                    activeGroup = false;
+                } else if (_this2.multiples[token] != null) {
+
+                    if (_this2.multiples[lastToken] != null) {
+                        // if input is entered as 'thousand thousand' or
+                        // 'million hundred' for example, make it invalid
+                        if (_this2.multiples[lastToken] >= _this2.multiples[token]) invalid = true;
+                    }
+                    result *= _this2.multiples[token];
+                } else if (token === 'minus') {
+                    isNegative = true;
                 } else {
-                    tempSum += result * _this.multiples[token];
+                    tempSum += result * _this2.multiples[token];
                     result = tempSum;
                 }
+                lastToken = token;
             });
 
-            this.showResult(result);
+            if (isNegative) result = -Math.abs(result);
+
+            if (!invalid) this.showResult(result);else this.showInputError('Invalid number syntax');
         }
     }, {
         key: 'showResult',
         value: function showResult(result) {
-            console.log(result);
+            this.outputZone.innerText = result;
         }
     }]);
 
